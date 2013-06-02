@@ -1,0 +1,217 @@
+<%+header%>
+
+<%
+local mylib = require "luci.model.cbi.wizard.mylib"
+--local sys   = require "luci.sys.net"
+%>
+
+<script type="text/javascript">//<![CDATA[
+var xhr = new XHR();
+
+// +------------------------+----------------------+
+// : ¦Internal IP ↓¦ <Scan> | ¦Description ↓¦      :
+// :------------------------+----------------------:
+// : _Internal_ports_       | _External_ports_     :
+// : [ 21   ] ¦TCP↓¦        | [ 21   ] ¦TCP↓¦      :
+// : [ 9399 ] ¦UDP↓¦        | [ 9399 ] ¦UDP↓¦      :
+// : + Add port             |                      :
+// :------------------------+----------------------:
+// : Internal zone ¦lan↓¦   | External zone ¦wan↓¦ :
+// +------------------------+----------------------+
+
+// Get forwarding rules for the selected item in droplist from UCI
+function get_fwdrules(devname) {
+	var select = document.getElementById("forwardinfo");
+
+	if (!devname) var devname  = document.getElementById("device_list").value;
+	if (devname == "") {
+		document.getElementById("apply_button").style.display = 'none';
+		select.innerHTML = '';
+		return
+	}
+
+	select.innerHTML =
+		'<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /> ' +
+		'<%:Fetching forwarding rules with new func...%>'
+		;
+
+	// This makes the dispatcher handle Lua calls with JavaScript variables as arguments.
+	xhr.get('<%=luci.dispatcher.build_url("admin", "wizard")%>/get_fwdrules/' + devname, null,
+		function(x) {
+			var jstring = x.responseText;
+			var obj = JSON.parse(x.responseText);
+
+			select.innerHTML = "";
+			display_scan(select, obj);
+			document.getElementById("apply_button").style.display = 'inline';
+		}
+	);
+}
+
+function selected_host() {
+	var hosts_list = document.getElementById("hosts_list");
+	var ip_address = document.getElementById("ip_address");
+
+	if (hosts_list.value === "other")
+		ip_address.style.display = 'inline';
+	else
+		ip_address.style.display = 'none';
+}
+
+// Print JSON from AJAX call
+function display_scan(select, obj) {
+	var ip_field = document.getElementById("ip_address");
+	var ip = ip_field.value;
+	// Print description
+	//select.innerHTML  = '<h3>' + obj["description"] + '</h3>';
+	select.innerHTML += '<h4>' + '<%:Ports: %>' + '</h4>';
+
+	// Print suggested ports
+	if (obj["tcp"].length > 0) {
+		select.innerHTML += "TCP: ";
+		select.innerHTML += obj["tcp"];
+		select.innerHTML += "<br/>";
+	}
+	if (obj["udp"].length > 0) {
+		select.innerHTML += "UDP: ";
+		select.innerHTML += obj["udp"];
+		select.innerHTML += "<br/>";
+	}
+	if (obj["both"].length > 0) {
+		select.innerHTML += "TCP+UDP: ";
+		select.innerHTML += obj["both"];
+		select.innerHTML += "<br/>";
+	}
+}
+
+function scan_ip() {
+	var select = document.getElementById("scan_results");
+
+	var target  = document.getElementById("ip_address").value;
+	select.innerHTML =
+		'<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /> ' +
+		'<%:Scanning%> ' + target + '...<br/>'
+		;
+
+
+	var obj = {};
+	if (false) {
+		obj = JSON.parse(fake_scan());
+		display_scan(select, obj);
+
+		var preset_list = document.getElementById("device_list");
+		// Fetch preset rules for the first detected service
+		for (service in obj) {
+			if (obj.hasOwnProperty(service)) {
+				// Select service in dropdown list
+				for (var i = 0; i < preset_list.options.length; i++) {
+					if (preset_list.options[i].value === service) {
+						preset_list.selectedIndex = i;
+					}
+				}
+				get_fwdrules(service);
+				break;
+			}
+		}
+	} else {
+		xhr.get('<%=luci.dispatcher.build_url("admin", "wizard")%>/scan_ip/' + target, null,
+			function(x) {
+				var jstring = x.responseText;
+
+				select.innerHTML = jstring;
+				obj = JSON.parse(jstring);
+				display_scan(select, obj);
+
+				var preset_list = document.getElementById("device_list");
+				// Fetch preset rules for the first detected service
+				for (service in obj) {
+					if (obj.hasOwnProperty(service)) {
+						// Select service in dropdown list
+						for (var i = 0; i < preset_list.options.length; i++) {
+							if (preset_list.options[i].value === service) {
+								preset_list.selectedIndex = i;
+							}
+						}
+					}
+					get_fwdrules(service);
+					break;
+				}
+			}
+		);
+	}
+}
+
+function fake_scan() {
+	obj = {};
+	obj = { "ssh": 22, "domain": 53, "http": 80, "netbios-ssn": 139, "microsoft-ds": 445 };
+	return obj;
+}
+
+// Applies redirection rules in /etc/config/firewall
+function apply_fwdrules() {
+	var select = document.getElementById("forwardinfo");
+	document.getElementById("apply_button").style.display = 'none';
+	select.innerHTML +=
+		'<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /> ' +
+		'<%:Applying forwarding rules....%>'
+		;
+
+	var devname  = document.getElementById("device_list").value;
+	location.href='<%=luci.dispatcher.build_url("admin/wizard/apply_fwdrules/")%>' + devname;
+	//location.href='<%=luci.dispatcher.build_url("admin/network/firewall/forwards/")%>';
+}
+
+// Populate drop down list with presets
+window.onload = function() {
+	var select = document.getElementById("device_list");
+
+	var dev_name = <%=mylib:device_list_name()%>;
+	var dev_desc = <%=mylib:device_list_desc()%>;
+
+	for (var i = 0; i < dev_name.length; i++) {
+		var el = document.createElement("option");
+		el.textContent = dev_desc[i];
+		el.value = dev_name[i];
+		select.appendChild(el);
+	}
+}
+
+//]]></script>
+
+<div class="cbi-map" id="cbi-foo">
+	<h2><%:Wizard page%></h2> 
+
+	<form method="post" action="<%=pcdata(luci.http.getenv("REQUEST_URI"))%>">
+		<h3>Scan for services</h3>
+		<select name="hosts_list" id="hosts_list" onChange="selected_host()">
+		<%luci.sys.net.ipv4_clients(function(ip, name)%>
+			<option value=<%=ip%>><%=ip%> (<%=name%>)
+		<%end)%>
+			<option value="other">-- Other --
+		</select>
+		<input type="text" id="ip_address" name="ip_address" style="display: none;">
+		<input id="scan_button" type="button" value="Scan" onclick="scan_ip();" />
+		<div id="scan_results">
+			<!-- scan results appear here -->
+			<div id="preset_list"> <!-- list of presets appear here --> </div>
+		</div>
+
+		<div id="preset">
+			<h3>Custom service from preset</h3>
+			<div id="list">
+				<select name="device_list" id="device_list" onChange="get_fwdrules();">
+					<!-- options appear here -->
+					<option value="">Select device</option>
+				</select>
+			</div>
+			<div id="ports">
+				<div id="forwardinfo"> <!-- forwarding rules appear here --> </div>
+			</div>
+			<div id="apply_button" style="display: none; ">
+				Do you want to apply redirection rules? 
+				<input id="apply" type="button" value="Apply" onclick="apply_fwdrules();" />
+			</div>
+		</div>
+	</form>
+</div>
+<%+footer%>

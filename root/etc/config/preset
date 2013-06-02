@@ -1,0 +1,108 @@
+
+config device 'xbox360'
+	option name 'xbox360'
+	option description 'Xbox 360 Live'
+
+config redirect
+	option device 'xbox360'
+	option proto 'udp'
+	option port '88'
+
+config redirect
+	option device 'xbox360'
+	option proto 'tcp udp'
+	option port '3074'
+
+config redirect
+	option device 'xbox360'
+	option proto 'tcp udp'
+	option port '53'
+
+config redirect
+	option device 'xbox360'
+	option proto 'tcp'
+	option port '80'
+
+config device 'http'
+	option name 'http'
+	option description 'HTTP Traffic'
+
+config redirect
+	option device 'http'
+	option proto 'tcp'
+	option port '80'
+
+config device 'pop3'
+	option name 'pop3'
+	option nmap_service 'pop3'
+	option description 'POP3 email'
+
+config redirect
+	option device 'pop3'
+	option proto 'tcp udp'
+	option port '110'
+
+config device 'ftp'
+	option name 'ftp'
+	option nmap_service 'ftp'
+	option description 'File Transfer Protocol'
+
+config redirect
+	option device 'ftp'
+	option proto 'tcp udp'
+	option port '20'
+
+config redirect
+	option device 'ftp'
+	option proto 'tcp udp'
+	option port '21'
+
+config device 'ssh'
+	option name 'ssh'
+	option nmap_service 'ssh'
+	option description 'Secure Shell Login'
+
+config redirect
+	option device 'ssh'
+	option proto 'tcp udp'
+	option port '22'
+
+config device 'imap'
+	option name 'imap'
+	option nmap_service 'imap'
+	option description 'Interim Mail Access Protocol v2'
+
+config redirect
+	option device 'imap'
+	option proto 'tcp udp'
+	option port '143'
+
+config device 'imap3'
+	option name 'imap3'
+	option nmap_service 'imap3'
+	option description 'Interactive Mail Access Protocol v3'
+
+config redirect
+	option device 'imap3'
+	option proto 'tcp udp'
+	option port '220'
+
+config device 'imaps'
+	option name 'imaps'
+	option nmap_service 'imaps'
+	option description 'imap4 protocol over TLS/SSL'
+
+config redirect
+	option device 'imaps'
+	option proto 'tcp udp'
+	option port '993'
+
+config device 'pop3s'
+	option name 'pop3s'
+	option nmap_service 'pop3s'
+	option description 'POP3 protocol over TLS/SSL'
+
+config redirect
+	option device 'pop3s'
+	option proto 'tcp udp'
+	option port '995'
