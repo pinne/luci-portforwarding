@@ -6,7 +6,7 @@ Port forwarding presets and device identification
  * do not use for loops
  * use Object.keys(jsonobjekt) to iterate, returns an array with keys
  * use .forEach(function(value,counter) { ... }); on array objects
- * Fix the enter thing, remove?
+ * migrate to using LuCI templates
 
 ## Instructions ##
 ### New LuCI application ###
@@ -44,3 +44,8 @@ and create or copy your files:
 ### Upload it to the router ###
     scp -r dist/* root@login:/
 
+## Testing scenario ##
+Enter the router ip address in browser:
+    http://login.lan/
+
+Select 
