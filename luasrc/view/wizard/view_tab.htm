@@ -21,8 +21,7 @@ function get_fwdrules(devname) {
 
 	select.innerHTML =
 		'<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /> ' +
-		'<%:Fetching forwarding rules...%>'
-		;
+		'<%:Fetching forwarding rules%>' + '...';
 
 	// This makes the dispatcher handle Lua calls with JavaScript variables as arguments.
 	xhr.get('<%=luci.dispatcher.build_url("admin", "wizard")%>/get_fwdrules/' + devname, null,
@@ -133,15 +132,15 @@ function fake_scan() {
 // Applies redirection rules in /etc/config/firewall
 function apply_fwdrules() {
 	var select = document.getElementById("forwardinfo");
+	var target = document.getElementById("ip_address").value;
+	var devname  = document.getElementById("device_list").value;
+
 	document.getElementById("apply_button").style.display = 'none';
 	select.innerHTML +=
 		'<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /> ' +
-		'<%:Applying forwarding rules....%>'
-		;
+		'<%:Applying forwarding rules for%> ' + target + '....';
 
-	var devname  = document.getElementById("device_list").value;
 	location.href='<%=luci.dispatcher.build_url("admin/wizard/apply_fwdrules/")%>' + devname;
-	//location.href='<%=luci.dispatcher.build_url("admin/network/firewall/forwards/")%>';
 }
 
 // Populate drop down list with presets
@@ -167,12 +166,13 @@ window.onload = function() {
 	<form onSubmit="return scan_ip()">
 		<h3><%:Select device%></h3>
 		<select name="hosts_list" id="hosts_list" onChange="selected_host()">
+			<option value="other">-- Device --
 		<%luci.sys.net.ipv4_clients(function(ip, name)%>
 			<option value=<%=ip%>><%=ip%> (<%=name%>)
 		<%end)%>
 			<option value="other">-- Other --
 		</select>
-		<input type="text" id="ip_address" name="ip_address" style="display: none;">
+		<input type="text" id="ip_address" name="ip_address">
 		<input id="scan_button" type="button" value="Scan" onclick="scan_ip();" />
 		<div id="scan_results">
 			<!-- scan results appear here -->
@@ -184,7 +184,7 @@ window.onload = function() {
 			<div id="list">
 				<select name="device_list" id="device_list" onChange="get_fwdrules();">
 					<!-- options appear here -->
-					<option value="">Select device</option>
+					<option value="">Select service</option>
 				</select>
 			</div>
 			<div id="ports">
