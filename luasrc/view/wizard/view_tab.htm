@@ -42,7 +42,7 @@ function get_fwdrules(devname) {
 			var obj = JSON.parse(x.responseText);
 
 			select.innerHTML = "";
-			display_scan(select, obj);
+			display_rules(select, obj);
 			document.getElementById("apply_button").style.display = 'inline';
 		}
 	);
@@ -58,14 +58,12 @@ function selected_host() {
 		ip_address.style.display = 'none';
 }
 
-// Print JSON from AJAX call
-function display_scan(select, obj) {
+// Print JSON from AJAX call as list of port details
+function display_rules(select, obj) {
 	var ip_field = document.getElementById("ip_address");
 	var ip = ip_field.value;
-	// Print description
-	//select.innerHTML  = '<h3>' + obj["description"] + '</h3>';
-	select.innerHTML += '<h4>' + '<%:Ports: %>' + '</h4>';
 
+	select.innerHTML += '<h4>' + '<%:Ports: %>' + '</h4>';
 	// Print suggested ports
 	if (obj["tcp"].length > 0) {
 		select.innerHTML += "TCP: ";
@@ -107,11 +105,11 @@ function scan_ip() {
 
 			// Fetch preset rules for the first detected service
 			for (service in obj) {
-				if (service == "none")
+				if (service == "none") {
 					select.innerHTML = "Could not find any available services";
-				if (obj.hasOwnProperty(service)) {
+				} else if (obj.hasOwnProperty(service)) {
+					display_services(select, obj);
 					// Select service in dropdown list
-					select.innerHTML = "Found available service";
 					for (var i = 0; i < preset_list.options.length; i++) {
 						if (preset_list.options[i].value === service) {
 							preset_list.selectedIndex = i;
@@ -123,6 +121,18 @@ function scan_ip() {
 			}
 		}
 	);
+}
+
+// Print JSON from AJAX call as list of detected services
+function display_services(select, obj) {
+	select.innerHTML = '<h4>' + '<%:Available service: %>' + '</h4>';
+	// Print discovered services
+	for (var service in obj) {
+		if (obj.hasOwnProperty(service)) {
+			select.innerHTML += service + '<br/>';
+			//<input type="button" value=service onclick="apply_fwdrules();" />
+		}
+	}
 }
 
 function fake_scan() {
