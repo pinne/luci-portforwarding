@@ -9,15 +9,18 @@ Port forwarding presets and device identification
  * migrate to using LuCI templates
 
 ### TODO template ###
+Make a template which plugs in to CBI pages.
+
     +------------------------+----------------------+
-    : ¦Internal IP ↓¦ <Scan> | ¦Description ↓¦      :
-    :------------------------+----------------------:
+    : ¦Internal IP ↓¦ <Scan> : ¦Preset      ↓¦      :
+    :                        :                      :  Do you want to apply
+    :------------------------+----------------------:  redirection rules?
     : _Internal_ports_       | _External_ports_     :
-    : [ 21   ] ¦TCP↓¦        | [ 21   ] ¦TCP↓¦      :
-    : [ 9399 ] ¦UDP↓¦        | [ 9399 ] ¦UDP↓¦      :
-    : + Add port             |                      :
+    : [ 21   ] ¦TCP↓¦        : [ 21   ] ¦TCP↓¦      :      .-------.
+    : [ 9399 ] ¦UDP↓¦        : [ 9399 ] ¦UDP↓¦      :      : Apply :
+    : + Add port             :                      :      '.......'
     :------------------------+----------------------:
-    : Internal zone ¦lan↓¦   | External zone ¦wan↓¦ :
+    : Internal zone ¦lan↓¦   : External zone ¦wan↓¦ :
     +------------------------+----------------------+
 
 ## Instructions ##
