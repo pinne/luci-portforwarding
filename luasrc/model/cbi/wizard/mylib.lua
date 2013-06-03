@@ -40,8 +40,7 @@ local device_rules = {
 
 function setip(self, dest_ip)
 	device_rules.ip = dest_ip
-	sys.exec("echo dest_ip: %s > /dev/console" %dest_ip)
-	sys.exec("echo dest_ip: %s > /dev/console" %device_rules.ip)
+	sys.exec("echo device_rules.ip = %s > /dev/console" %device_rules.ip)
 	return
 end
 
