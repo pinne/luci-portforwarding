@@ -8,17 +8,6 @@ local mylib = require "luci.model.cbi.wizard.mylib"
 <script type="text/javascript">//<![CDATA[
 var xhr = new XHR();
 
-// +------------------------+----------------------+
-// : ¦Internal IP ↓¦ <Scan> | ¦Description ↓¦      :
-// :------------------------+----------------------:
-// : _Internal_ports_       | _External_ports_     :
-// : [ 21   ] ¦TCP↓¦        | [ 21   ] ¦TCP↓¦      :
-// : [ 9399 ] ¦UDP↓¦        | [ 9399 ] ¦UDP↓¦      :
-// : + Add port             |                      :
-// :------------------------+----------------------:
-// : Internal zone ¦lan↓¦   | External zone ¦wan↓¦ :
-// +------------------------+----------------------+
-
 // Get forwarding rules for the selected item in droplist from UCI
 function get_fwdrules(devname) {
 	var select = document.getElementById("forwardinfo");

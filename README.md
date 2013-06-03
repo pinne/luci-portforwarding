@@ -8,6 +8,18 @@ Port forwarding presets and device identification
  * use .forEach(function(value,counter) { ... }); on array objects
  * migrate to using LuCI templates
 
+### TODO template ###
+    +------------------------+----------------------+
+    : ¦Internal IP ↓¦ <Scan> | ¦Description ↓¦      :
+    :------------------------+----------------------:
+    : _Internal_ports_       | _External_ports_     :
+    : [ 21   ] ¦TCP↓¦        | [ 21   ] ¦TCP↓¦      :
+    : [ 9399 ] ¦UDP↓¦        | [ 9399 ] ¦UDP↓¦      :
+    : + Add port             |                      :
+    :------------------------+----------------------:
+    : Internal zone ¦lan↓¦   | External zone ¦wan↓¦ :
+    +------------------------+----------------------+
+
 ## Instructions ##
 ### New LuCI application ###
 Make a new directory for the LuCI application, or copy the myapplication/ dir
