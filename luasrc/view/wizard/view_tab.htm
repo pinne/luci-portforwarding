@@ -165,10 +165,8 @@ window.onload = function() {
 <div class="cbi-map" id="cbi-foo">
 	<h2><%:Wizard page%></h2> 
 
-<!--
-	<form method="post" action="<%=pcdata(luci.http.getenv("REQUEST_URI"))%>">
--->
-		<h3>Autodetect available services</h3>
+	<form onSubmit="return scan_ip()">
+		<h3><%:Select device%></h3>
 		<select name="hosts_list" id="hosts_list" onChange="selected_host()">
 		<%luci.sys.net.ipv4_clients(function(ip, name)%>
 			<option value=<%=ip%>><%=ip%> (<%=name%>)
@@ -199,8 +197,6 @@ window.onload = function() {
 				<input id="apply" type="button" value="Apply" onclick="apply_fwdrules();" />
 			</div>
 		</div>
-<!--
 	</form>
--->
 </div>
 <%+footer%>

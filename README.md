@@ -6,7 +6,6 @@ Port forwarding presets and device identification
  * do not use for loops
  * use Object.keys(jsonobjekt) to iterate, returns an array with keys
  * use .forEach(function(value,counter) { ... }); on array objects
-
  * Fix the enter thing, remove?
 
 ## Instructions ##
