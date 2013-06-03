@@ -1,14 +1,23 @@
-## TODO ##
-använd inte forloopar
-använd Object.keys(jsonobjekt) to iterate, returns an array with keys
-use .forEach(function(value,counter) { ... }); on array objects
+Port forwarding presets and device identification
+=================================================
 
-Fix the enter thing
+## TODO ##
+ * diplay available services
+ * do not use for loops
+ * use Object.keys(jsonobjekt) to iterate, returns an array with keys
+ * use .forEach(function(value,counter) { ... }); on array objects
+
+ * Fix the enter thing, remove?
 
 ## Instructions ##
+### New LuCI application ###
 Make a new directory for the LuCI application, or copy the myapplication/ dir
 and create or copy your files:
-    simon ~/Documents/School/Exjobb/iop-backfire/build_dir/target-mips_uClibc-0.9.30.1/luci-inteno-1.0.9/applications/luci-portforwarding  (luci-portforward)
+
+### Working directory ###
+    ~/Documents/School/Exjobb/iop-backfire/build_dir/target-mips_uClibc-0.9.30.1/luci-inteno-1.0.9/applications/luci-portforwarding
+
+### Dir structure ###
     $ tree .
     .
     |-- luasrc
@@ -30,8 +39,9 @@ and create or copy your files:
     
     11 directories, 5 files
 
-Compile it:
+### Compile it ###
     make
 
-Upload it to the router:
+### Upload it to the router ###
     scp -r dist/* root@login:/
+
