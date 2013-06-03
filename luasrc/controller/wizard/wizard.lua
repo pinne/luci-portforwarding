@@ -31,8 +31,6 @@ function index()
 end
 
 function scan_ip(target)
-	sys.exec("id_service.sh %s" %target)
-	wizard:setip(target);
 	luci.http.write(sys.exec("id_service.sh %s" %target))
 end
 
@@ -46,10 +44,12 @@ function get_fwdrules(devname)
 	luci.http.write(str)
 end
 
-function apply_fwdrules(devname, target)
+function apply_fwdrules(devname)
 	wizard:construct_table(devname)
 	loctable = wizard:get_table()
-	sys.exec("echo controller/apply_fwdrules:  %s > /dev/console" %loctable.description)
+	sys.exec("echo controller/apply_fwdrules:  description %s > /dev/console" %loctable.description)
+	sys.exec("echo controller/apply_fwdrules:  target_ip   %s > /dev/console" %target_ip)
+	sys.exec("echo controller/apply_fwdrules:  target      %s > /dev/console" %loctable.dest_ip)
 	wizard:apply_rules()
 	--redirect to the same page!
 	luci.http.redirect(luci.dispatcher.build_url("admin/wizard/view_tab"))
