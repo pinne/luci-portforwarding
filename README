@@ -1,0 +1,37 @@
+## TODO ##
+använd inte forloopar
+använd Object.keys(jsonobjekt) to iterate, returns an array with keys
+use .forEach(function(value,counter) { ... }); on array objects
+
+Fix the enter thing
+
+## Instructions ##
+Make a new directory for the LuCI application, or copy the myapplication/ dir
+and create or copy your files:
+    simon ~/Documents/School/Exjobb/iop-backfire/build_dir/target-mips_uClibc-0.9.30.1/luci-inteno-1.0.9/applications/luci-portforwarding  (luci-portforward)
+    $ tree .
+    .
+    |-- luasrc
+    |   |-- controller
+    |   |   `-- wizard
+    |   |       `-- wizard.lua
+    |   |-- model
+    |   |   `-- cbi
+    |   |       `-- wizard
+    |   |           `-- mylib.lua
+    |   `-- view
+    |       `-- wizard
+    |           `-- view_tab.htm
+    |-- Makefile
+    `-- root
+        `-- etc
+            `-- config
+                `-- preset
+    
+    11 directories, 5 files
+
+Compile it:
+    make
+
+Upload it to the router:
+    scp -r dist/* root@login:/

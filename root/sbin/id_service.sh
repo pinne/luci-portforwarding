@@ -54,8 +54,7 @@ main() {
         rm /tmp/fifo
 
         # return string if we found anything
-        NOT_FOUND_MSG="Couldn't find any open services"
-        echo "$RESULT" | sed 's/, $/ }/' | sed 's/{ $/Could not find any open services/'
+        echo "$RESULT" | sed 's/, $/ }/' | sed 's/{ $/{ \"none\" }/'
     fi
 }
 

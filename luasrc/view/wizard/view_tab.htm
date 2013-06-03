@@ -32,7 +32,7 @@ function get_fwdrules(devname) {
 
 	select.innerHTML =
 		'<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /> ' +
-		'<%:Fetching forwarding rules with new func...%>'
+		'<%:Fetching forwarding rules...%>'
 		;
 
 	// This makes the dispatcher handle Lua calls with JavaScript variables as arguments.
@@ -86,59 +86,43 @@ function display_scan(select, obj) {
 
 function scan_ip() {
 	var select = document.getElementById("scan_results");
+	var hosts  = document.getElementById("hosts_list");
+	var target;
 
-	var target  = document.getElementById("ip_address").value;
+	if (hosts.value != "other")
+		target = hosts[hosts.selectedIndex].value;
+	else
+		target = document.getElementById("ip_address").value;
+
 	select.innerHTML =
 		'<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /> ' +
-		'<%:Scanning%> ' + target + '...<br/>'
-		;
-
+		'<%:Scanning%> ' + target + '...<br/>';
 
 	var obj = {};
-	if (false) {
-		obj = JSON.parse(fake_scan());
-		display_scan(select, obj);
+	xhr.get('<%=luci.dispatcher.build_url("admin", "wizard")%>/scan_ip/' + target, null,
+		function(x) {
+			var jstring = x.responseText;
+			var obj = JSON.parse(jstring);
+			var preset_list = document.getElementById("device_list");
 
-		var preset_list = document.getElementById("device_list");
-		// Fetch preset rules for the first detected service
-		for (service in obj) {
-			if (obj.hasOwnProperty(service)) {
-				// Select service in dropdown list
-				for (var i = 0; i < preset_list.options.length; i++) {
-					if (preset_list.options[i].value === service) {
-						preset_list.selectedIndex = i;
+			// Fetch preset rules for the first detected service
+			for (service in obj) {
+				if (service == "none")
+					select.innerHTML = "Could not find any available services";
+				if (obj.hasOwnProperty(service)) {
+					// Select service in dropdown list
+					select.innerHTML = "Found available service";
+					for (var i = 0; i < preset_list.options.length; i++) {
+						if (preset_list.options[i].value === service) {
+							preset_list.selectedIndex = i;
+						}
 					}
 				}
 				get_fwdrules(service);
 				break;
 			}
 		}
-	} else {
-		xhr.get('<%=luci.dispatcher.build_url("admin", "wizard")%>/scan_ip/' + target, null,
-			function(x) {
-				var jstring = x.responseText;
-
-				select.innerHTML = jstring;
-				obj = JSON.parse(jstring);
-				display_scan(select, obj);
-
-				var preset_list = document.getElementById("device_list");
-				// Fetch preset rules for the first detected service
-				for (service in obj) {
-					if (obj.hasOwnProperty(service)) {
-						// Select service in dropdown list
-						for (var i = 0; i < preset_list.options.length; i++) {
-							if (preset_list.options[i].value === service) {
-								preset_list.selectedIndex = i;
-							}
-						}
-					}
-					get_fwdrules(service);
-					break;
-				}
-			}
-		);
-	}
+	);
 }
 
 function fake_scan() {
@@ -181,8 +165,10 @@ window.onload = function() {
 <div class="cbi-map" id="cbi-foo">
 	<h2><%:Wizard page%></h2> 
 
+<!--
 	<form method="post" action="<%=pcdata(luci.http.getenv("REQUEST_URI"))%>">
-		<h3>Scan for services</h3>
+-->
+		<h3>Autodetect available services</h3>
 		<select name="hosts_list" id="hosts_list" onChange="selected_host()">
 		<%luci.sys.net.ipv4_clients(function(ip, name)%>
 			<option value=<%=ip%>><%=ip%> (<%=name%>)
@@ -197,7 +183,7 @@ window.onload = function() {
 		</div>
 
 		<div id="preset">
-			<h3>Custom service from preset</h3>
+			<h3>Apply forwarding rules for service</h3>
 			<div id="list">
 				<select name="device_list" id="device_list" onChange="get_fwdrules();">
 					<!-- options appear here -->
@@ -208,10 +194,13 @@ window.onload = function() {
 				<div id="forwardinfo"> <!-- forwarding rules appear here --> </div>
 			</div>
 			<div id="apply_button" style="display: none; ">
+				<!-- apply button appear when rules have been selected-->
 				Do you want to apply redirection rules? 
 				<input id="apply" type="button" value="Apply" onclick="apply_fwdrules();" />
 			</div>
 		</div>
+<!--
 	</form>
+-->
 </div>
 <%+footer%>
