@@ -29,8 +29,7 @@ local sys = require "luci.sys"
 local device_rules = {
 	name,
 	description,
-	ip,
-	target,
+	dest_ip,
 	src  = 'wan',
 	dest = 'lan',
 	tcp  = {},
@@ -38,9 +37,10 @@ local device_rules = {
 	both = {}
 }
 
-function setip(self, dest_ip)
-	device_rules.ip = dest_ip
-	sys.exec("echo device_rules.ip = %s > /dev/console" %device_rules.ip)
+function set_ip(self, target)
+	device_rules.dest_ip = target
+	_uci_real:section("temp", "redirect", nil, { dest_ip = target })
+	sys.exec("echo device_rules.dest_ip = %s > /dev/console" %device_rules.dest_ip)
 	return
 end
 
@@ -170,10 +170,9 @@ function redir_rule(proto_name, port)
 	              , dest_port = port
 	              , proto     = proto_name
 	              , name      = device_rules.description
-	              , target    = device_rules.target
 	              , src       = device_rules.src
 	              , dest      = device_rules.dest
-	              , dest_ip   = device_rules.ip
+	              , dest_ip   = device_rules.dest_ip
 	}
 	return rules
 end
