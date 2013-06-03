@@ -23,6 +23,19 @@ Make a template which plugs in to CBI pages.
     : Internal zone ¦lan↓¦   : External zone ¦wan↓¦ :
     +------------------------+----------------------+
 
+### TODO use UCI config as database ###
+#### Write IP ####
+    view       : select target IP send to controller
+    controller : send target IP to model
+    model      : overwrite temporary UCI config file
+    model      : write target IP to temporary UCI config file
+#### Apply rules ####
+    view       : select forwarding preset send to controller
+    controller : send forwarding preset to model
+    model      : write to temporary config file
+    model      : commit config file to UCI firewall config
+    model      : delete temporary UCI config file
+
 ## Instructions ##
 ### New LuCI application ###
 Make a new directory for the LuCI application, or copy the myapplication/ dir
