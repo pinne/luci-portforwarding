@@ -41,6 +41,7 @@ function set_ip(self, target)
 	device_rules.dest_ip = target
 	_uci_real:section("temp", "redirect", nil, { dest_ip = target })
 	sys.exec("echo device_rules.dest_ip = %s > /dev/console" %device_rules.dest_ip)
+	--_uci_real:save("firewall")
 	return
 end
 

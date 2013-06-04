@@ -166,7 +166,6 @@ window.onload = function() {
 	<form onSubmit="return scan_ip()">
 		<h3><%:Select device%></h3>
 		<select name="hosts_list" id="hosts_list" onChange="selected_host()">
-			<option value="other">-- Device --
 		<%luci.sys.net.ipv4_clients(function(ip, name)%>
 			<option value=<%=ip%>><%=ip%> (<%=name%>)
 		<%end)%>
