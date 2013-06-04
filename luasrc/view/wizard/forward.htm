@@ -117,10 +117,20 @@ function display_services(select, obj) {
 	// Print discovered services
 	for (var service in obj) {
 		if (obj.hasOwnProperty(service)) {
-			select.innerHTML += service + '<br/>';
+			if (has_rules(service))
+				select.innerHTML += service + '<br/>';
 			//<input type="button" value=service onclick="apply_fwdrules();" />
 		}
 	}
+}
+
+function has_rules(service) {
+	var dev_name = <%=portforwarding:device_list_name()%>;
+	for (var i = 0; i < dev_name.length; i++)
+		if (service === dev_name[i])
+			return true;
+
+	return false;
 }
 
 function fake_scan() {
