@@ -1,7 +1,7 @@
 <%+header%>
 
 <%
-local mylib = require "luci.model.cbi.wizard.mylib"
+local portforwarding = require "luci.model.cbi.wizard.portforwarding"
 --local sys   = require "luci.sys.net"
 %>
 
@@ -147,8 +147,8 @@ function apply_fwdrules() {
 window.onload = function() {
 	var select = document.getElementById("device_list");
 
-	var dev_name = <%=mylib:device_list_name()%>;
-	var dev_desc = <%=mylib:device_list_desc()%>;
+	var dev_name = <%=portforwarding:device_list_name()%>;
+	var dev_desc = <%=portforwarding:device_list_desc()%>;
 
 	for (var i = 0; i < dev_name.length; i++) {
 		var el = document.createElement("option");
