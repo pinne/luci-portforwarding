@@ -39,7 +39,7 @@ main() {
             case "$line" in
                 *"open"*)
                     SERVICE=$(echo "$line" | awk '{print $3}')
-                    if [ $SERVICE == "LSA-or-nterm" ]; then
+                    if [ $SERVICE == "LSA-or-nterm" ] || [ $SERVICE == "IIS" ]; then
                         SERVICE=$(is_xbox360 "$1")
                     fi
 
