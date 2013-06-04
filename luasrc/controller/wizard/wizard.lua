@@ -9,8 +9,8 @@ function index()
 
 	entry({"admin", "wizard"}, firstchild(), "Wizard", 30).dependent=false
 
-	page = entry({"admin", "wizard", "view_tab"}, template("wizard/view_tab"), "View tab", 20)
-	page.target = template("wizard/view_tab")
+	page = entry({"admin", "wizard", "forward"}, template("wizard/forward"), "Port forwarding", 20)
+	page.target = template("wizard/forward")
 
 	page = node("admin", "wizard", "devices")
 	page.target = cbi("wizard/devices")
@@ -52,7 +52,7 @@ function apply_fwdrules(devname)
 	sys.exec("echo controller/apply_fwdrules:  target      %s > /dev/console" %loctable.dest_ip)
 	wizard:apply_rules()
 	--redirect to the same page!
-	luci.http.redirect(luci.dispatcher.build_url("admin/wizard/view_tab"))
+	luci.http.redirect(luci.dispatcher.build_url("admin/wizard/forward"))
 	--luci.http.redirect(luci.dispatcher.build_url("admin/network/network"))
 end
 
