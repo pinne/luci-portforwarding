@@ -19,7 +19,7 @@ local string = string
 --    = print, tostring, table, string
 local map
 
-module "luci.model.cbi.wizard.mylib"
+module "luci.model.cbi.wizard.portforwarding"
 
 local uci   = require "luci.model.uci"
 _uci_real  = cursor or _uci_real or uci.cursor()

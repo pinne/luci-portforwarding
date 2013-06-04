@@ -1,6 +1,6 @@
 module("luci.controller.wizard.wizard", package.seeall)
 
-local wizard = require "luci.model.cbi.wizard.mylib"
+local wizard = require "luci.model.cbi.wizard.portforwarding"
 local sys = require "luci.sys"
 
 function index()
