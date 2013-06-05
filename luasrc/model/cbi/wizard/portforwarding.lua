@@ -89,8 +89,9 @@ function get_table(self)
 end
 
 -- Build a Lua table of redirection rules
-function construct_table(self, devname)
+function construct_table(self, devname, target_ip)
 	device_rules.name = devname
+	device_rules.dest_ip = target_ip
 	device_rules.description = _uci_real:get("preset", devname, "description")
 
 	_uci_real:foreach("preset", "redirect",

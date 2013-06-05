@@ -142,15 +142,20 @@ function fake_scan() {
 // Applies redirection rules in /etc/config/firewall
 function apply_fwdrules() {
 	var select = document.getElementById("forwardinfo");
-	var target = document.getElementById("ip_address").value;
 	var devname  = document.getElementById("device_list").value;
+	var hosts  = document.getElementById("hosts_list");
+	if (hosts.value != "other")
+		target = hosts[hosts.selectedIndex].value;
+	else
+		target = document.getElementById("ip_address").value;
 
 	document.getElementById("apply_button").style.display = 'none';
 	select.innerHTML +=
 		'<img src="<%=resource%>/icons/loading.gif" alt="<%:Loading%>" style="vertical-align:middle" /> ' +
 		'<%:Applying forwarding rules for%> ' + target + '....';
 
-	location.href='<%=luci.dispatcher.build_url("admin/wizard/apply_fwdrules/")%>' + devname;
+	location.href='<%=luci.dispatcher.build_url("admin/wizard/apply_fwdrules/")%>'
+		+ devname + ',' + target;
 }
 
 // Populate drop down list with presets
