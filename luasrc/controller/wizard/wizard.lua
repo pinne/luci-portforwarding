@@ -31,9 +31,10 @@ function index()
 end
 
 function scan_ip(target)
-	sys.exec("id_service.sh %s" %target)
-	wizard:setip(target);
+	sys.exec("echo scanning: %s > /dev/console" %target)
+	--wizard:setip(target);
 	luci.http.write(sys.exec("id_service.sh %s" %target))
+	sys.exec("echo scanned: %s > /dev/console" %target)
 end
 
 function get_fwdrules(devname)
